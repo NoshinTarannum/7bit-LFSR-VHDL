@@ -1,0 +1,30 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity sevenbit_lfsr is
+    Port ( Clock : in  STD_LOGIC;
+		Reset : in STD_LOGIC;
+           PRBS : out  STD_LOGIC);
+end sevenbit_lfsr;
+
+architecture Behavioral of sevenbit_lfsr is
+
+	signal sr : STD_LOGIC_VECTOR(6 downto 0);
+
+begin
+	PRBS <= sr(0);
+	
+	lfsr : process(Clock, Reset)
+	
+	begin
+		if (Reset = '0') then
+			sr <= "0000000";
+		elsif rising_edge(Clock) then
+			if (sr = "0000000") then
+				sr <= "0000001";
+			else
+				sr <= (sr(3) xor sr(0)) & sr(6 downto 1);
+			end if;
+		end if;
+	end process;
+end Behavioral;
